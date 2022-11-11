@@ -1,24 +1,14 @@
 const inputText = document.querySelector(".input-text");
-
-// console.log({inputText}) // null 출력됨 -> html 랜더링 순서와 관련있음 -> html하단에 script작성
-// DOM이 되는 것을 볼 수 있음. 작성 내용은 value에 담김.
-
 const addButton = document.querySelector(".add-button");
 const list = document.querySelector(".list");
-
 const likeButtons = document.querySelectorAll(".like");
-// console.log(likeButtons)
-// 각각의 요소에 addEvent를 걸어줘야 함
-likeButtons.forEach(like=>{
-    like.addEventListener("click", ()=>{ // 등록할 당시 새로운 요소에는 addEvent가 추가되지 않기 때문
-        console.log('clicked')  // 새로운 요소의 클릭 이벤트 발생하지 않음.
-    })
-})
 
-addButton.addEventListener("click", function(){
-    //console.log(inputText.value) // 이 내용을 list에 추가하기
-    
-    
+
+
+function addItem (){
+
+    if(inputText.value.trim() === "") return;  // input이 빈칸이면 등록하지 않고 함수 종료
+
     // like
     const like = document.createElement("span");
     const likeIcon = document.createElement("i");
@@ -48,11 +38,49 @@ addButton.addEventListener("click", function(){
 
     const li = document.createElement("li");
 
-   // li.innerText = inputText.value;
+    // event
+    like.addEventListener("click", (e)=>{
+        const target = e.target; // i태그의 inputText를 바꿔주기
+        
+        // if(target.innerText === "favorite"){
+        //     target.innerText = "favorite_border"
+        // } else {
+        //     target.innerText = "favorite";
+        // }
+
+        // 삼항연산자
+        const text = target.innerText === "favorite" ? "favorite_border" : "favorite"
+        target.innerText = text;
+        
+        // console.log(e) 
+    })
+    checkIcon.addEventListener("click", (e)=>{
+        const target = e.target.parentNode.parentNode;
+        // console.log(e) // event의 target 안에 parentNode안에 parentNode를 보면 li 선택되는 것을 볼 수 있음
+        target.classList.add("done")
+    })
+    clearIcon.addEventListener("click", (e)=>{
+        const target = e.target.parentNode.parentNode;
+        list.removeChild(target)    // 선택된 li 삭제
+    })
+
     li.appendChild(like)
     li.appendChild(item)
     li.appendChild(manage)
-    list.appendChild(li)  // element를 삽입할 때 쓰는 메소드
+    list.appendChild(li)
+
+    inputText.value = "";   // input 값 초기화
+    inputText.focus()
+}
+
+
+
+inputText.addEventListener("keypress", e=>{ // 키를 누르는 이벤트를 인자로 받음
+    //console.log(e)  // 엔터 입력 시 키 코드가 13으로 출력됨. 스페이스바 키 코드는 32
+    if(e.keyCode == 13) {
+        addItem()
+    }    
 })
 
-// span을 만들고 그 span을 생성한 li 안에 appendChild로 삽입하고 삽인한 li를 list에 넣어줌
+
+addButton.addEventListener("click", addItem)    

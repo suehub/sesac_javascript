@@ -35,7 +35,7 @@ function gameover() {
 
 // 시간 카운트다운
 function countDown(){
-     console.log(time)
+    // console.log(time)
     time = time - 1;
     timeDisplay.innerText = time;
     if(time === 0) {
